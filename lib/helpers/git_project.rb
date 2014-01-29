@@ -64,28 +64,28 @@ class GitProject
 
     # Create root_dir
     def create_root_dir(path)
-      if path
-        GitProject.create_directory(path)
-      else
-        raise "root_dir isn't defined"
-      end
+      GitProject.create_directory(path) unless File.directory?(path)
     end
 
     # Clone unless dir exists
-    def clone(uri, name, path)
-      unless File.directory?("#{path}/#{name}")
-        Git.clone(uri, name, path: path)
+    def clone(url, name, path)
+      r = "#{path}/#{name}"
+      if Git.open(r)
+        p "Already cloned #{url}"
+      else
+        Git.clone(url, name, path: path) || Git.init(r)
+        g = Git.open(r)
+        p "Cloning #{url} as #{name} into #{path}"
       end
+      g
     end
 
     # Add remote
     def add_remote(g, v)
       g.add_remote('all', v['origin'])
-
       v.each do |name, remote|
         unless ['root_dir', 'origin', 'all'].include?(name)
-          # might have to check if remote exists
-          g.add_remote(name, remote)
+          g.add_remote(name, remote) unless g.remotes.map(&:name).include?(name)
 
           # add to all remote
           # useful when you want to do git push all --all
@@ -94,12 +94,12 @@ class GitProject
       end
     end
 
-    def fetch(path, name)
-      working_dir = "#{path}/#{name}"
-
-      if File.directory?(working_dir)
-        g = Git.open(working_dir)
-        g.remotes.each { |r| r.fetch }
+    def fetch(g, url)
+      g.remotes.each do |r|
+        unless r.name=='all'
+          r.fetch
+          p "Fetching updates from #{r.name} : #{r.url}"
+        end
       end
     end
   end
@@ -107,21 +107,37 @@ class GitProject
   # 1. Clone all repositories based on the origin key
   # 2. Add all other remotes unless it is origin
   def clone_all
-    @project.all.each do  |k,v|
-      GitProject.create_root_dir(v['root_dir'])
-      g =  GitProject.clone(v['origin'], k, v['root_dir'])
-      GitProject.add_remote(g,v) if g
+    @project.all.each do |k,v|
+      begin
+        p "root_dir isn't defined for #{k}" unless v['root_dir']
+        p "The dir #{v['root_dir']} does not exist" unless File.directory?(v['root_dir'])
+        GitProject.create_root_dir(v['root_dir'])
+        g =  GitProject.clone(v.values[0], k, v['root_dir'])
+        GitProject.add_remote(g,v) if g
+      rescue => e
+        g = Git.init("#{v['root_dir']}/#{k}")
+        if g
+          GitProject.add_remote(g,v)
+          GitProject.fetch(g, v)
+        end
+        p "Please check paths and permissions for #{k}. Error: #{e}"
+        p "Failed to clone #{v.values[0]}. Initialized & fetch update from remotes instead."
+      end
     end
   end
 
   # Fetch all updates for remotes for all projects
   def fetch_all
-    @project.all.each do  |k,v|
+    p "Found #{@project.all.size} projects"
+    @project.all.each do |k,v|
+      p "Fetching changes for #{k}"
       GitProject.create_root_dir(v['root_dir'])
-      if GitProject.fetch(v['root_dir'], k)
-        return true
-      end
+      working_dir = "#{v['root_dir']}/#{k}"
+      g = Git.open(working_dir) || Git.init(working_dir)
+      GitProject.fetch(g, v)
+      GitProject.add_remote(g,v)
     end
+    return true
   end
 
 end

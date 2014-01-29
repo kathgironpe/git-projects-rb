@@ -10,9 +10,9 @@ program_desc 'Easily manage Git projects'
 
 pre do |global_options,command,options,args|
   if ENV['GIT_PROJECTS']
-    p ENV['GIT_PROJECTS']
+    p "Checking repositories. If things go wrong, update #{ENV['GIT_PROJECTS']}"
   else
-    raise "Please add the path your git projects config. \n export GIT_PROJECTS=/path/to/git_projects.yml:$GIT_PROJECTS"
+    raise "Please add the path your git projects config. \n export GIT_PROJECTS=/path/to/git_projects.yml"
   end
 end
 

@@ -25,6 +25,12 @@ Be careful. Sometimes it's not useful to do `git push all --all`.
 * Ruby 2.1.0 +
 * Git projects
 
+## Installation
+
+You can use this globally without having install with `sudo` if you use `rvm 2.1.0 --default`.
+
+`gem install git-projects`
+
 ## Configuration
 
 The app requires that you have a configuration file and a environment variable called `GIT_PROJECTS`.
@@ -36,17 +42,19 @@ project1:
   github: path/to/repo
   assembla: path/to/repo
   heroku: path/to/repo
+  root_dir: path/to/root_dir #where your repository will be cloned
 project2:
   origin: path/to/repo
   github: path/to/repo
   assembla: path/to/repo
   heroku: path/to/repo
+  root_dir: path/to/root_dir #where your repository will be cloned
 ```
 
 Regardless of whether you use bash or zsh, please add the path:
 
 ```bash
-export GIT_PROJECTS=$(/path/to/git-projects.yml):$GIT_PROJECTS
+export GIT_PROJECTS=$(/path/to/git-projects.yml)
 ```
 
 If all of your projects reside in one directory, there's a convenient command for generating the configuration file:
@@ -68,6 +76,4 @@ This will fetch all changes for all remotes for all repositories:
 
 ## Maintainer
 
-> Laziness is a virtue of a good programmer.
-
-[Katherine Pe](http://c.kat.pe)
+<a href="http://c.kat.pe">Katherine Pe</a>

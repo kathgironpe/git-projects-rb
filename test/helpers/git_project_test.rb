@@ -32,8 +32,7 @@ describe GitProject do
       @git = GitProject.new(config_path)
     end
 
-    context 'when root_dir exists' do
-
+    context 'when root_dir exists and repositories are cloned' do
       let(:directories) { Dir.entries(path) }
 
       it 'clones repositories on root_dir' do
