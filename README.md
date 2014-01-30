@@ -43,12 +43,14 @@ project1:
   assembla: path/to/repo
   heroku: path/to/repo
   root_dir: path/to/root_dir #where your repository will be cloned
+  group: name # useful if you do not want to fetch changes for all
 project2:
   origin: path/to/repo
   github: path/to/repo
   assembla: path/to/repo
   heroku: path/to/repo
   root_dir: path/to/root_dir #where your repository will be cloned
+  group: web
 ```
 
 Regardless of whether you use bash or zsh, please add the path:
@@ -59,21 +61,51 @@ export GIT_PROJECTS=$(/path/to/git-projects.yml)
 
 If all of your projects reside in one directory, there's a convenient command for generating the configuration file:
 
-`git-projects config /path/to/repositories`
+```bash
+git-projects config  /path/to/repositories
+```
 
-## Cloning all repositories
+It could be helpful to a group as sometimes we do not want to fetch changes for all.
+By default the group name is the name of the directory where your repository resides.
+You can change that by specifying the group this way:
 
-This will clone all repositories:
+```bash
+git-projects config  /path/to/repositories web
+```
 
-`git-projects clone`
+## Checking or initializing all repositories
 
+This will check if repositories are cloned. Otherwise, it will initialize the repository and add the remotes.
+
+```bash
+git-projects init
+```
 
 ## Fetching changes from all remotes
 
 This will fetch all changes for all remotes for all repositories:
 
-`git-projects fetch`
+```bash
+git-projects fetch
+```
+
+## Fetching changes for  a group
+
+This will fetch all changes for repositories with group called assembla:
+
+```bash
+git-projects fetch assembla
+```
+
+## Adding remotes
+
+If you added a new remote by editing the config file, you might want to add to make sure it's added to the repository as well:
+
+```bash
+git-projects add-remotes
+```
+
 
 ## Maintainer
 
-<a href="http://c.kat.pe">Katherine Pe</a>
+<a href="http://c.kat.pe" target="_blank">Katherine Pe</a>

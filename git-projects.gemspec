@@ -7,15 +7,20 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/katgironpe/git-projects'
   s.platform = Gem::Platform::RUBY
   s.summary = 'Easily manage Git projects'
-  s.files = `git ls-files`.split("
-                                 ")
+ s.files = [
+    'lib/git-projects.rb',
+    'lib/helpers/git-project.rb',
+    'lib/helpers/projects.rb',
+    'lib/git-projects/version.rb'
+   ]
   s.require_paths << 'lib'
   s.bindir = 'bin'
   s.license     = 'MIT'
   s.files = Dir['lib/**/*.rb']
   s.executables << 'git-projects'
   s.add_dependency('git', '1.2.6')
-  s.add_development_dependency('rake')
+  s.add_dependency('colorize')
   s.add_development_dependency('aruba')
+  s.add_development_dependency('rake')
   s.add_runtime_dependency('gli','2.9.0')
 end

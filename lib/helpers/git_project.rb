@@ -1,6 +1,7 @@
 require_relative 'project'
 require 'git'
 require 'yaml'
+require 'colorize'
 
 class GitProject
 
@@ -11,6 +12,7 @@ class GitProject
   end
 
   class << self
+
     # Create YAML file
     def create_yaml_file(config_file, projects)
       File.open(config_file, "w") do |f|
@@ -33,18 +35,22 @@ class GitProject
     end
 
     # Create a configuration file based on a root path
-    def create_config(dir)
+    def create_config(dir, group=nil)
       dir = dir.is_a?(Array) ? dir.first : dir
-      config_file = "#{dir}/git-projects.yml"
+      config_file = File.join(dir, "git-projects.yml")
+      group ||= dir.split(File::SEPARATOR).last if dir
+
       unless File.exists?(config_file)
         projects = []
         Dir.entries(dir)[2..-1].each do |project|
-          g = Git.open("#{dir}/#{project}")
+          g = Git.open(File.join(dir, project))
           p = {}
-          p[project]  = add_remotes_to_hash(g, p, dir)
+          p[project] = add_remotes_to_hash(g, p, dir)
+          p[project]['group'] = group
           projects << p
           create_yaml_file(config_file, projects)
         end
+        puts "You can later fetch changes through: git-projects fetch #{group}".green
       else
         raise "The config file, #{config_file} exists"
       end
@@ -57,8 +63,8 @@ class GitProject
     # Create dir unless it exists
     def create_directory(path)
       unless File.directory?(path)
-        `mkdir -p #{path}`
-        printf("Creating directory: %s\n", path)
+        `mkdir -puts #{path}`
+        puts "Creating directory: ".green+"#{path}".blue
       end
     end
 
@@ -67,38 +73,48 @@ class GitProject
       GitProject.create_directory(path) unless File.directory?(path)
     end
 
+    # Check for the config
+    def check_config
+      if ENV['GIT_PROJECTS']
+        puts "Checking repositories. If things go wrong, update #{ENV['GIT_PROJECTS']}".green
+      else
+        raise "Please add the path your git projects config. \n export GIT_PROJECTS=/path/to/git_projects.yml"
+      end
+    end
+
     # Clone unless dir exists
     def clone(url, name, path)
       r = "#{path}/#{name}"
       if Git.open(r)
-        p "Already cloned #{url}"
+        puts "Already cloned ".yellow+ "#{url}".blue
       else
         Git.clone(url, name, path: path) || Git.init(r)
         g = Git.open(r)
-        p "Cloning #{url} as #{name} into #{path}"
+        puts "Cloning #{url} as #{name} into #{path}".green
       end
       g
     end
 
     # Add remote
     def add_remote(g, v)
-      g.add_remote('all', v['origin'])
+      g.add_remote('all', v['origin']) unless g.remotes.map(&:name).include?('all')
       v.each do |name, remote|
-        unless ['root_dir', 'origin', 'all'].include?(name)
-          g.add_remote(name, remote) unless g.remotes.map(&:name).include?(name)
-
-          # add to all remote
-          # useful when you want to do git push all --all
-          `git remote set-url --add all #{remote}`
+        unless ['root_dir', 'all', 'group'].include?(name) || g.remotes.map(&:name).include?(name)
+          if g.add_remote(name, remote)
+            # add to all remote
+            # useful when you want to do git push all --all
+            `git remote set-url --add all #{remote}`
+            puts "Added remote #{name}".green
+          end
         end
       end
     end
 
     def fetch(g, url)
       g.remotes.each do |r|
-        unless r.name=='all'
+        unless ['root_dir', 'all', 'group'].include?(name)
           r.fetch
-          p "Fetching updates from #{r.name} : #{r.url}"
+          puts "Fetching updates from #{r.name}: #{r.url}".green
         end
       end
     end
@@ -106,11 +122,11 @@ class GitProject
 
   # 1. Clone all repositories based on the origin key
   # 2. Add all other remotes unless it is origin
-  def clone_all
+  def init
     @project.all.each do |k,v|
       begin
-        p "root_dir isn't defined for #{k}" unless v['root_dir']
-        p "The dir #{v['root_dir']} does not exist" unless File.directory?(v['root_dir'])
+        puts "root_dir isn't defined for #{k}" unless v['root_dir']
+        puts "The dir #{v['root_dir']} does not exist" unless File.directory?(v['root_dir'])
         GitProject.create_root_dir(v['root_dir'])
         g =  GitProject.clone(v.values[0], k, v['root_dir'])
         GitProject.add_remote(g,v) if g
@@ -120,22 +136,48 @@ class GitProject
           GitProject.add_remote(g,v)
           GitProject.fetch(g, v)
         end
-        p "Please check paths and permissions for #{k}. Error: #{e}"
-        p "Failed to clone #{v.values[0]}. Initialized & fetch update from remotes instead."
+        puts "Please check paths and permissions for #{k}. Error: #{e}".red
+        puts "Failed to clone #{v.values[0]}. Initialized & fetch update from remotes instead.".yellow
       end
     end
   end
 
-  # Fetch all updates for remotes for all projects
-  def fetch_all
-    p "Found #{@project.all.size} projects"
+  def projects
+    @project.all
+  end
+
+  # Add a new remote
+  def new_remote(project, name, url)
+    @project.new_remote(project, name, url)
+  end
+
+  # Change group
+  def new_group(project, name)
+    @project.new_group(project, name)
+  end
+
+  # Add missing remotes
+  def add_remotes
+    puts "Found #{@project.all.size} projects".green
     @project.all.each do |k,v|
-      p "Fetching changes for #{k}"
+      working_dir = "#{v['root_dir']}/#{k}"
+      g = Git.open(working_dir) || Git.init(working_dir)
+      GitProject.add_remote(g,v)
+      puts "Checking new remotes for #{k}".green
+    end
+  end
+
+  # Fetch all updates
+  # Group is optional
+  # By default, fetch from all
+  def fetch_all(group=nil)
+    puts "Found #{@project.all.size} projects".green
+    @project.all(group).each do |k,v|
+      puts "Fetching changes for #{k}".green
       GitProject.create_root_dir(v['root_dir'])
       working_dir = "#{v['root_dir']}/#{k}"
       g = Git.open(working_dir) || Git.init(working_dir)
       GitProject.fetch(g, v)
-      GitProject.add_remote(g,v)
     end
     return true
   end

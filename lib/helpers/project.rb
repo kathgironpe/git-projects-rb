@@ -1,4 +1,5 @@
 require 'yaml'
+require 'colorize'
 
 class Project
 
@@ -8,8 +9,8 @@ class Project
     @projects = YAML.load_file(config)
   end
 
-  def all
-    @projects
+  def all(group=nil)
+    group ? @projects.select { |k, v| v['group'].include?(group) } : @projects
   end
 
   def first
@@ -21,6 +22,18 @@ class Project
       project.each do |k,v|
         v['root_dir'] = path
       end
+    end
+  end
+
+  def new_remote(remote, name, url)
+    @projects.tap do |project|
+      project[remote][name] = url
+    end
+  end
+
+  def new_group(remote, name)
+    @projects.tap do |project|
+      project[remote]['group'] = name
     end
   end
 end

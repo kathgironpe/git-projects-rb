@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'gli'
 require 'json'
+require 'colorize'
 require_relative 'helpers/project'
 require_relative 'helpers/git_project'
 
@@ -8,40 +9,40 @@ include GLI::App
 
 program_desc 'Easily manage Git projects'
 
-pre do |global_options,command,options,args|
-  if ENV['GIT_PROJECTS']
-    p "Checking repositories. If things go wrong, update #{ENV['GIT_PROJECTS']}"
-  else
-    raise "Please add the path your git projects config. \n export GIT_PROJECTS=/path/to/git_projects.yml"
-  end
-end
-
 desc 'Create a config'
-skips_pre
 command :config do |c|
   c.action do |global_options,options,args|
-    config_path = "#{args.first}/git-projects.yml"
-    GitProject.create_config(args)
+    config_path = "#{args[0]}/git-projects.yml"
+    group = args[1] || nil
+    GitProject.create_config(args[0], group)
     if File.open(config_path)
-      p "successfully created git-projects.yml"
+      puts "Successfully created git-projects.yml".green
     end
   end
 end
 
-desc 'Clone all projects'
-command :clone do |c|
+desc 'Clone or initialize all projects'
+command :init do |c|
   c.action do
-    if GitProject.new(ENV['GIT_PROJECTS']).clone_all
-      p 'successfully cloned repositories'
-    end
+    GitProject.check_config # the pre feature of GLI has a bug. investigate later.
+    GitProject.new(ENV['GIT_PROJECTS']).init
   end
 end
 
-desc 'Fetch changed from all remotes'
+desc 'Add missing remotes'
+command :'add-remotes' do |c|
+  c.action do
+    GitProject.check_config
+    GitProject.new(ENV['GIT_PROJECTS']).add_remotes
+  end
+end
+
+desc 'Fetch changes from all remotes'
 command :fetch do |c|
-  c.action do
-    if GitProject.new(ENV['GIT_PROJECTS']).fetch_all
-      p 'successfully fetched changes'
+  c.action do |global_options,options,args|
+    GitProject.check_config
+    if GitProject.new(ENV['GIT_PROJECTS']).fetch_all(args[0])
+      puts "Successfully fetched changes".green
     end
   end
 end

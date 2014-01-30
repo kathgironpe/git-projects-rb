@@ -10,6 +10,19 @@
 ## git-projects 0.0.2 (January 29, 2014)
 
 * Installation notes.
-* Fixed a bug about cloning aborted if root_dir is missing for one project
-* Added useful debugging messages
-* Skip fetching from `all` remote
+* Fixed a bug about cloning aborted if root_dir is missing for one project.
+* Added useful debugging messages.
+* Skip fetching from `all` remote.
+
+## git-projects 0.0.3 (January 31, 2014)
+
+* Fixed a bug that discontinues updates when remote has already been added.
+* Renamed `clone` to `init`.
+* Grouping projects is now possible with `git fetch group-name`. By default `git fetch` will still fetch changes from all repositories.
+* Because of the grouping requirement, `git-projects config` was refactored to allow two arguments (path and group).
+* Added `git-projects add-remotes`
+* Added useful colors to distinguish errors from success messages.
+
+## git-projects 0.0.4 (February, 2014)
+
+* Removed the directory argument for `git-projects config`

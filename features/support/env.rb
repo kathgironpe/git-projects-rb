@@ -13,5 +13,3 @@ end
 After do
   ENV['RUBYLIB'] = @original_rubylib
 end
-
-
