@@ -62,7 +62,8 @@ export GIT_PROJECTS=$(/path/to/git-projects.yml)
 If all of your projects reside in one directory, there's a convenient command for generating the configuration file:
 
 ```bash
-git-projects config  /path/to/repositories
+cd /path/to/repositories
+git-projects config
 ```
 
 It could be helpful to a group as sometimes we do not want to fetch changes for all.
@@ -70,7 +71,8 @@ By default the group name is the name of the directory where your repository res
 You can change that by specifying the group this way:
 
 ```bash
-git-projects config  /path/to/repositories web
+cd /path/to/repositories
+git-projects config web
 ```
 
 ## Checking or initializing all repositories
