@@ -8,7 +8,7 @@ You are a developer who uses Git and contributes to multiple projects for work a
 If you haven't found an easy way to fetch changes for all your projects then this could help.
 As developers we are familiar with commands for updating dependencies of our projects.
 Rubyists use `bundle`, VIM users can similarly update using `:BundleInstall`, iOS developers use `pod install` and the list goes on.
-With this project you can fetch changes using some commands like `git-projects update`.
+With this project you can fetch changes using some commands like `git-projects fetch`.
 
 ## Limitations
 
