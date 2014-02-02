@@ -22,14 +22,16 @@ Be careful. Sometimes it's not useful to do `git push all --all`.
 ## Prerequisities
 
 * Git
-* Ruby 2.1.0 +
+* Ruby 2.0.0 +
 * Git projects
 
 ## Installation
 
-You can use this globally without having install with `sudo` if you use `rvm 2.1.0 --default`.
+You can use this globally without having install with `sudo` if you use something like `rvm 2.1.0 --default`.
 
-`gem install git-projects`
+```bash
+gem install git-projects
+```
 
 ## Configuration
 
