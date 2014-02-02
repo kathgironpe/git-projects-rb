@@ -158,7 +158,6 @@ class GitProject
 
   # Add missing remotes
   def add_remotes
-    puts "Found #{@project.all.size} projects".green
     @project.all.each do |k,v|
       working_dir = "#{v['root_dir']}/#{k}"
       g = Git.open(working_dir) || Git.init(working_dir)
@@ -171,7 +170,6 @@ class GitProject
   # Group is optional
   # By default, fetch from all
   def fetch_all(group=nil)
-    puts "Found #{@project.all.size} projects".green
     @project.all(group).each do |k,v|
       puts "Fetching changes for #{k}".green
       GitProject.create_root_dir(v['root_dir'])

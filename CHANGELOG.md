@@ -23,6 +23,10 @@
 * Added `git-projects add-remotes`
 * Added useful colors to distinguish errors from success messages.
 
-## git-projects 0.0.4 (February, 2014)
+## git-projects 0.0.4 (February 2, 2014)
 
 * Removed the directory argument for `git-projects config`
+
+## git-projects 0.0.5 (February 2, 2014)
+
+* Removed output mentioning number of projects.
