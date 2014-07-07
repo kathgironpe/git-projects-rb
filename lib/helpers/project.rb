@@ -1,25 +1,25 @@
 require 'yaml'
 require 'colorize'
 
+# Project represents a Git project
 class Project
-
-  attr :projects
+  attr_reader :projects
 
   def initialize(config)
     @projects = YAML.load_file(config)
   end
 
-  def all(group=nil)
-    group ? @projects.select { |k, v| v['group'].include?(group) } : @projects
+  def all(group = nil)
+    group ? @projects.select { |_k, v| v['group'].include?(group) } : @projects
   end
 
   def first
     all.first
   end
 
-  def set_root_path(path)
+  def create_root_path(path)
     @projects.tap do |project|
-      project.each do |k,v|
+      project.each do |_k, v|
         v['root_dir'] = path
       end
     end

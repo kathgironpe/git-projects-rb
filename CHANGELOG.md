@@ -30,3 +30,7 @@
 ## git-projects 0.0.5 (February 2, 2014)
 
 * Removed output mentioning number of projects.
+
+## git-projects 0.0.6 (July 7, 2014)
+
+* Fixed logic and code style issues.

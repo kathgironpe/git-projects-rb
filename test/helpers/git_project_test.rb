@@ -64,7 +64,7 @@ describe GitProject do
 
     context 'when there is no group' do
       it 'fetches all updates for all remotes' do
-        @git.fetch_all.must_equal true
+        @git.fetch_all.to_s.must_include 'github'
         directories.size.must_equal 8
       end
     end
@@ -76,7 +76,7 @@ describe GitProject do
       end
 
       it 'fetches all updates for group ruby' do
-        @git.fetch_all('ruby').must_equal true
+        @git.fetch_all('ruby').to_s.must_include 'github'
         directories.size.must_equal 8
       end
     end

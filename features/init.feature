@@ -6,4 +6,4 @@ Feature: Check all repositories
 
   Scenario: When path and directories exist
     When I check repositories
-    Then the output should contain "Checking repositories. If things go wrong, update"
+    Then the output should contain "Checking repositories. If things go wrong,"

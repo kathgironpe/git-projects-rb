@@ -11,20 +11,18 @@ program_desc 'Easily manage Git projects'
 
 desc 'Create a config'
 command :config do |c|
-  c.action do |global_options,options,args|
+  c.action do |global_options, options, args|
     config_path = "#{args[0]}/git-projects.yml"
     group = args[1] || nil
     GitProject.create_config(args[0], group)
-    if File.open(config_path)
-      puts "Successfully created git-projects.yml".green
-    end
+    puts 'Created git-projects.yml'.green if File.open(config_path)
   end
 end
 
 desc 'Clone or initialize all projects'
 command :init do |c|
   c.action do
-    GitProject.check_config # the pre feature of GLI has a bug. investigate later.
+    GitProject.check_config
     GitProject.new(ENV['GIT_PROJECTS']).init
   end
 end
@@ -39,10 +37,10 @@ end
 
 desc 'Fetch changes from all remotes'
 command :fetch do |c|
-  c.action do |global_options,options,args|
+  c.action do |global_options, options, args|
     GitProject.check_config
     if GitProject.new(ENV['GIT_PROJECTS']).fetch_all(args[0])
-      puts "Successfully fetched changes".green
+      puts 'Successfully fetched changes'.green
     end
   end
 end

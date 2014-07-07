@@ -56,10 +56,10 @@ describe Project do
     end
   end
 
-  describe '#set_root_path' do
+  describe '#create_root_path' do
     before do
       path = Dir.pwd+project_path
-      @project.set_root_path(path)
+      @project.create_root_path(path)
     end
 
     context 'when user overrides root_dir' do

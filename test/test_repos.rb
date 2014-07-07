@@ -35,7 +35,7 @@ module TestRepos
     @project = @project.new_remote(project, name, @project.first[1]['origin'])
     `rm #{ENV['GIT_PROJECTS']}` if File.exists?(ENV['GIT_PROJECTS'])
     File.open(ENV['GIT_PROJECTS'], "w") do |f|
-      f.write @project.to_yaml.gsub(/- /,'').gsub(/    /,'  ').gsub(/---/,'')
+      f.write @project.to_yaml.gsub(/- /, '').gsub(/    /, '  ').gsub(/---/, '')
     end
   end
 
@@ -48,7 +48,7 @@ module TestRepos
     @project = @project.new_group(project, name)
     `rm #{ENV['GIT_PROJECTS']}` if File.exists?(ENV['GIT_PROJECTS'])
     File.open(ENV['GIT_PROJECTS'], "w") do |f|
-      f.write @project.to_yaml.gsub(/- /,'').gsub(/    /,'  ').gsub(/---/,'')
+      f.write @project.to_yaml.gsub(/- /, '').gsub(/    /,'  ').gsub(/---/, '')
     end
   end
 end
