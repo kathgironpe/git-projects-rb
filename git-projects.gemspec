@@ -18,9 +18,10 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.files = Dir['lib/**/*.rb']
   s.executables << 'git-projects'
-  s.add_dependency('git', '1.2.7')
   s.add_dependency('colorize')
+  s.add_dependency('git', '1.2.7')
   s.add_development_dependency('aruba')
+  s.add_development_dependency('minitest', '5.4.0')
   s.add_development_dependency('rake')
   s.add_runtime_dependency('gli','2.9.0')
 end
