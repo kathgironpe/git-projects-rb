@@ -33,6 +33,16 @@ class GitProject
       end
     end
 
+    # Create has for the project
+    def project_info_hash(dir, project, group)
+      g = Git.open(File.join(dir, project))
+      p = {}
+      p.tap do |pr|
+        pr[project] = add_remotes_to_hash(g, dir)
+        pr[project]['group'] = group
+      end
+    end
+
     # Create a configuration file based on a root path
     def create_config(dir, group = nil)
       dir = dir.is_a?(Array) ? dir.first : dir
@@ -43,11 +53,7 @@ class GitProject
 
       projects = []
       Dir.entries(dir)[2..-1].each do |project|
-        g = Git.open(File.join(dir, project))
-        p = {}
-        p[project] = add_remotes_to_hash(g, dir)
-        p[project]['group'] = group
-        projects << p
+        projects << project_info_hash(dir, project, group)
         create_yaml_file(config_file, projects)
       end
       puts "You can later fetch changes through:
@@ -93,20 +99,21 @@ class GitProject
       g
     end
 
+    def remote_exists?(g, name)
+      g.remotes.map(&:name).include?(name)
+    end
+
     # Add remote
     def add_remote(g, v)
-      unless g.remotes.map(&:name).include?('all')
-        g.add_remote('all', v['origin'])
-      end
+      g.add_remote('all', v['origin']) unless remote_exists?(g, 'all')
       v.each do |name, remote|
         next if  %w(root_dir all group).include?(name) ||
           g.remotes.map(&:name).include?(name)
-        if g.add_remote(name, remote)
-          # add to all remote
-          # useful when you want to do git push all --all
-          `git remote set-url --add all #{remote}`
-          puts "Added remote #{name}".green
-        end
+        g.add_remote(name, remote)
+        # add to all remote
+        # useful when you want to do git push all --all
+        `git remote set-url --add all #{remote}`
+        puts "Added remote #{name}".green
       end
     end
 
@@ -122,9 +129,7 @@ class GitProject
   # 1. Clone all repositories based on the origin key
   # 2. Add all other remotes unless it is origin
   def create_project_and_remotes(k, v)
-    unless v['root_dir']
-      puts "root_dir isn't defined for #{k}"
-    end
+    puts "root_dir isn't defined for #{k}" unless v['root_dir']
     unless File.directory?(v['root_dir'])
       puts "The dir #{v['root_dir']} does not exist"
     end
