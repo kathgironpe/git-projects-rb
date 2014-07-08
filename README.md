@@ -27,7 +27,7 @@ Be careful. Sometimes it's not useful to do `git push all --all`.
 
 ## Installation
 
-You can use this globally without having install with `sudo` if you use something like `rvm 2.1.0 --default`.
+You can use this globally without having install with `sudo` if you use something like `rvm 2.1.2 --default`.
 
 ```bash
 gem install git-projects
@@ -95,10 +95,10 @@ git-projects fetch
 
 ## Fetching changes for  a group
 
-This will fetch all changes for repositories with group called assembla:
+This will fetch all changes for repositories with group called `group-name`:
 
 ```bash
-git-projects fetch assembla
+git-projects fetch group-name
 ```
 
 ## Adding remotes
