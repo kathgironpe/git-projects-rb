@@ -43,19 +43,21 @@ class GitProject
       end
     end
 
+    def create_project_info_hash(projects, dir, group, config_file)
+      Dir.entries(dir)[2..-1].each do |project|
+        projects << project_info_hash(dir, project, group)
+        create_yaml_file(config_file, projects)
+      end
+    end
+
     # Create a configuration file based on a root path
     def create_config(dir, group = nil)
       dir = dir.is_a?(Array) ? dir.first : dir
       config_file = File.join(dir, 'git-projects.yml')
       group ||= dir.split(File::SEPARATOR).last if dir
-
       fail "The config file, #{config_file} exists" if File.exist?(config_file)
-
       projects = []
-      Dir.entries(dir)[2..-1].each do |project|
-        projects << project_info_hash(dir, project, group)
-        create_yaml_file(config_file, projects)
-      end
+      create_project_info_hash(projects, dir, group, config_file)
       puts "You can later fetch changes through:
             \ngit-projects fetch #{group}".green
     end
@@ -103,17 +105,19 @@ class GitProject
       g.remotes.map(&:name).include?(name)
     end
 
+    def add_new_remote(g, name, remote)
+      g.add_remote(name, remote)
+      `git remote set-url --add all #{remote}`
+      puts "Added remote #{name}".green
+    end
+
     # Add remote
     def add_remote(g, v)
-      g.add_remote('all', v['origin']) unless remote_exists?(g, 'all')
+      g.add_remote('origin', v['origin']) unless remote_exists?(g, 'origin')
       v.each do |name, remote|
         next if  %w(root_dir all group).include?(name) ||
           g.remotes.map(&:name).include?(name)
-        g.add_remote(name, remote)
-        # add to all remote
-        # useful when you want to do git push all --all
-        `git remote set-url --add all #{remote}`
-        puts "Added remote #{name}".green
+        add_new_remote(g, name, remote)
       end
     end
 
@@ -182,8 +186,6 @@ class GitProject
     end
   end
 
-  # Fetch all updates
-  # Group is optional
   # By default, fetch from all
   def fetch_all(group = nil)
     @project.all(group).each do |k, v|
