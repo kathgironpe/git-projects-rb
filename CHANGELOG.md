@@ -39,3 +39,7 @@
 ## git-projects 0.0.7 (July 11, 2014)
 
 * Refactored helpers
+
+## git-projects 0.0.8 (July 11, 2014)
+
+* Fixed a regression

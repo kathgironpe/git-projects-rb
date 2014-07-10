@@ -33,7 +33,7 @@ module GitProjectRemote
 
     def add_new_remote(g, name, remote)
       g.add_remote(name, remote)
-      `git remote set-url --add all #{remote}`
+      g.add_remote('all', remote) unless remote_exists?(g, name)
       puts "Added remote #{name}".green
     end
 
