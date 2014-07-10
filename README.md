@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/katgironpe/git-projects.png)](https://codeclimate.com/github/katgironpe/git-projects)
+
 # Git Projects
 
 Easily manage Git projects that usually have more than one remote repository.
