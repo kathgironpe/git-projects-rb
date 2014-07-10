@@ -1,3 +1,5 @@
+require_relative 'git_project_config'
+require_relative 'git_project_remote'
 require_relative 'project'
 require 'git'
 require 'yaml'
@@ -7,146 +9,11 @@ require 'colorize'
 class GitProject
   attr_reader :project
 
+  include GitProjectConfig
+  include GitProjectRemote
+
   def initialize(config)
     @project = Project.new(config)
-  end
-
-  class << self
-    # Create YAML file
-    def create_yaml_file(config_file, projects)
-      File.open(config_file, 'w') do |f|
-        f.write projects.to_yaml.gsub(/- /, '').gsub(/    /, '  ').gsub(/---/, '')
-      end
-    end
-
-    # Create a hash for remotes
-    def add_remotes_to_hash(g, dir)
-      remotes_h = {}
-      r = {}
-      remotes_h.tap do |remotes|
-        g.remotes.each do |remote|
-          r[remote.name] = remote.url
-        end
-        r['all'] = true
-        r['root_dir'] = dir
-        remotes.merge!(r)
-      end
-    end
-
-    # Create has for the project
-    def project_info_hash(dir, project, group)
-      g = Git.open(File.join(dir, project))
-      p = {}
-      p.tap do |pr|
-        pr[project] = add_remotes_to_hash(g, dir)
-        pr[project]['group'] = group
-      end
-    end
-
-    def create_project_info_hash(projects, dir, group, config_file)
-      Dir.entries(dir)[2..-1].each do |project|
-        projects << project_info_hash(dir, project, group)
-        create_yaml_file(config_file, projects)
-      end
-    end
-
-    # Create a configuration file based on a root path
-    def create_config(dir, group = nil)
-      dir = dir.is_a?(Array) ? dir.first : dir
-      config_file = File.join(dir, 'git-projects.yml')
-      group ||= dir.split(File::SEPARATOR).last if dir
-      fail "The config file, #{config_file} exists" if File.exist?(config_file)
-      projects = []
-      create_project_info_hash(projects, dir, group, config_file)
-      puts "You can later fetch changes through:
-            \ngit-projects fetch #{group}".green
-    end
-
-    def create_root_path(path)
-      @project.create_root_path(path)
-    end
-
-    # Create dir unless it exists
-    def create_directory(path)
-      `mkdir -p #{path}` unless File.directory?(path)
-      puts 'Creating directory: '.green + "#{path}".blue
-    end
-
-    # Create root_dir
-    def create_root_dir(path)
-      GitProject.create_directory(path) unless File.directory?(path)
-    end
-
-    # Check for the config
-    def check_config
-      if ENV['GIT_PROJECTS']
-        puts "Checking repositories. If things go wrong,
-              update #{ENV['GIT_PROJECTS']}".green
-      else
-        fail "Please add the path your git projects config. \n
-              export GIT_PROJECTS=/path/to/git_projects.yml"
-      end
-    end
-
-    # Clone unless dir exists
-    def clone(url, name, path)
-      r = "#{path}/#{name}"
-      if Git.open(r)
-        puts 'Already cloned '.yellow + "#{url}".blue
-      else
-        Git.clone(url, name, path: path) || Git.init(r)
-        g = Git.open(r)
-        puts "Cloning #{url} as #{name} into #{path}".green
-      end
-      g
-    end
-
-    def remote_exists?(g, name)
-      g.remotes.map(&:name).include?(name)
-    end
-
-    def add_new_remote(g, name, remote)
-      g.add_remote(name, remote)
-      `git remote set-url --add all #{remote}`
-      puts "Added remote #{name}".green
-    end
-
-    # Add remote
-    def add_remote(g, v)
-      g.add_remote('origin', v['origin']) unless remote_exists?(g, 'origin')
-      v.each do |name, remote|
-        next if  %w(root_dir all group).include?(name) ||
-          g.remotes.map(&:name).include?(name)
-        add_new_remote(g, name, remote)
-      end
-    end
-
-    def fetch(g)
-      g.remotes.each do |r|
-        next if %w(root_dir all group).include?(r.name)
-        r.fetch
-        puts "Fetching updates from #{r.name}: #{r.url}".green
-      end
-    end
-  end
-
-  # 1. Clone all repositories based on the origin key
-  # 2. Add all other remotes unless it is origin
-  def create_project_and_remotes(k, v)
-    puts "root_dir isn't defined for #{k}" unless v['root_dir']
-    unless File.directory?(v['root_dir'])
-      puts "The dir #{v['root_dir']} does not exist"
-    end
-    GitProject.create_root_dir(v['root_dir'])
-    g =  GitProject.clone(v.values[0], k, v['root_dir'])
-    GitProject.add_remote(g, v) if g
-  end
-
-  def initialize_and_add_remotes(k, v)
-    g = Git.init("#{v['root_dir']}/#{k}")
-    return nil unless g
-    GitProject.add_remote(g, v)
-    GitProject.fetch(g)
   end
 
   def init
@@ -160,6 +27,13 @@ class GitProject
               fetched updates from remotes instead.".yellow
       end
     end
+  end
+
+  def initialize_and_add_remotes(k, v)
+    g = Git.init("#{v['root_dir']}/#{k}")
+    return nil unless g
+    GitProject.add_remote(g, v)
+    GitProject.fetch(g)
   end
 
   def projects
@@ -184,6 +58,18 @@ class GitProject
       GitProject.add_remote(g, v)
       puts "Checking new remotes for #{k}".green
     end
+  end
+
+  # 1. Clone all repositories based on the origin key
+  # 2. Add all other remotes unless it is origin
+  def create_project_and_remotes(k, v)
+    puts "root_dir isn't defined for #{k}" unless v['root_dir']
+    unless File.directory?(v['root_dir'])
+      puts "The dir #{v['root_dir']} does not exist"
+    end
+    GitProject.create_root_dir(v['root_dir'])
+    g =  GitProject.clone(v.values[0], k, v['root_dir'])
+    GitProject.add_remote(g, v) if g
   end
 
   # By default, fetch from all
