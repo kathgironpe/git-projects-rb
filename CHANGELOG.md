@@ -34,3 +34,8 @@
 ## git-projects 0.0.6 (July 7, 2014)
 
 * Fixed logic and code style issues.
+
+
+## git-projects 0.0.7 (July 11, 2014)
+
+* Refactored helpers
