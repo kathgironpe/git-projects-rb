@@ -14,7 +14,7 @@ class Project
   end
 
   def first
-    all.first
+    all.sort.first
   end
 
   def create_root_path(path)
