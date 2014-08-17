@@ -9,7 +9,7 @@ module TestRepos
 
   def git_projects_path(project_path)
     path = Dir.pwd+project_path
-    `mkdir -p #{path}` unless File.directory?(path)
+    FileUtils::mkdir_p(path) unless File.directory?(path)
     path
   end
 
