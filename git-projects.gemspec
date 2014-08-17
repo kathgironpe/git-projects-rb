@@ -21,7 +21,8 @@ Gem::Specification.new do |s|
   s.add_dependency('colorize')
   s.add_dependency('git', '1.2.7')
   s.add_development_dependency('aruba', '0.6.0')
-  s.add_development_dependency('minitest', '5.4.0')
+  s.add_development_dependency('rspec')
+  s.add_development_dependency('rspec-core')
   s.add_development_dependency('rake')
   s.add_runtime_dependency('gli','2.12.0')
 end

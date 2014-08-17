@@ -3,7 +3,8 @@ require 'rubygems'
 require 'rubygems/package_task'
 require 'cucumber'
 require 'cucumber/rake/task'
-require 'rake/testtask'
+require 'rspec/core/rake_task'
+
 
 spec = eval(File.read('git-projects.gemspec'))
 
@@ -30,17 +31,11 @@ Cucumber::Rake::Task.new('features:wip') do |t|
   t.fork = false
 end
 
-task :cucumber => :features
+RSpec::Core::RakeTask.new(:spec) do |task|
+  task.rspec_opts = ['--color', '--format', 'nested']
+end
+
+task cucummber: :features
 task 'cucumber:wip' => 'features:wip'
-task :wip => 'features:wip'
-require 'rake/testtask'
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList['test/*_test.rb']
-end
-
-Rake::TestTask.new do |t|
-  t.pattern = "test/**/*_test.rb"
-end
-
-task :default => [:test, :features]
+task wip: 'features:wip'
+task default: [:spec, :features]

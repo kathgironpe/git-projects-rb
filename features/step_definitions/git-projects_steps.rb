@@ -1,4 +1,4 @@
-require_relative '../../test/test_repos'
+require_relative '../../spec/support/test_repos'
 require_relative '../../lib/helpers/git_project'
 
 include TestRepos

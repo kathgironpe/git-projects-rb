@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require_relative '../spec_helper'
 require_relative '../../lib/helpers/git_project'
 
 describe GitProject do
@@ -22,21 +22,21 @@ describe GitProject do
 
       it 'creates a git-projects.yml file' do
         config_file = File.open("#{path}/git-projects.yml").read
-        config_file.must_include 'origin:'
-        config_file.must_include 'group: repos'
+        expect(config_file).to include 'origin:'
+        expect(config_file).to include 'group: repos'
       end
     end
 
     context 'when config does not exist' do
       it 'creates a git-projects.yml file with group specified' do
         config_file = File.open("#{path}/git-projects.yml").read
-        config_file.must_include 'group: anything'
+        expect(config_file).to include 'group: anything'
       end
     end
 
     context 'when config exists' do
       it 'returns an exception' do
-        assert_raises(RuntimeError) { GitProject.create_config(path) }
+        expect { GitProject.create_config(path) }.to raise_error(RuntimeError)
       end
     end
   end
@@ -50,7 +50,7 @@ describe GitProject do
 
       it 'clones or initializes repositories on root_dir' do
         @git.init
-        directories.size.must_equal 8
+        expect(directories.size).to eq(8)
       end
     end
   end
@@ -64,8 +64,8 @@ describe GitProject do
 
     context 'when there is no group' do
       it 'fetches all updates for all remotes' do
-        @git.fetch_all.to_s.must_include 'github'
-        directories.size.must_equal 8
+        expect(@git.fetch_all.to_s).to include 'github'
+        expect(directories.size).to eq(8)
       end
     end
 
@@ -76,8 +76,8 @@ describe GitProject do
       end
 
       it 'fetches all updates for group ruby' do
-        @git.fetch_all('ruby').to_s.must_include 'github'
-        directories.size.must_equal 8
+        expect(@git.fetch_all('ruby').to_s).to include 'github'
+        expect(directories.size).to eq(8)
       end
     end
   end
@@ -91,7 +91,8 @@ describe GitProject do
       end
 
       it 'adds missing remotes' do
-        Git.open("#{git_projects_path(project_path)}/a").remotes.map(&:name).must_include('bitbucket')
+        remotes = Git.open("#{git_projects_path(project_path)}/a").remotes.map(&:name)
+        expect(remotes).to include('bitbucket')
       end
     end
   end

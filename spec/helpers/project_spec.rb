@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require_relative '../spec_helper'
 require_relative '../../lib/helpers/project'
 
 describe Project do
@@ -18,7 +18,7 @@ describe Project do
   describe '#all' do
     context 'when size is called' do
       it 'returns correct number of projects' do
-        @project.all.size.must_equal 5
+        expect(@project.all.size).to eq(5)
       end
     end
 
@@ -29,7 +29,7 @@ describe Project do
       end
 
       it 'should filter projects by group' do
-        @project.all('ruby').size.must_equal 1
+        expect(@project.all('ruby').size).to eq(1)
       end
     end
   end
@@ -37,21 +37,21 @@ describe Project do
   describe '#first' do
     context 'when there is a root_dir' do
       it 'includes the name of the project' do
-        @project.first[0].must_equal 'a'
+        expect(@project.first[0]).to eq('a')
       end
 
       it 'should not include the root_dir' do
-        @project.first[1].keys.must_include 'root_dir'
+        expect(@project.first[1].keys).to include 'root_dir'
       end
 
       it 'incudes the remotes' do
-        @project.first[1]['origin'].must_include project_path
+        expect(@project.first[1]['origin']).to include project_path
       end
     end
 
     context 'when there is an all option' do
       it 'should include all option' do
-        @project.first[1].keys.must_include 'all'
+        expect(@project.first[1].keys).to include 'all'
       end
     end
   end
@@ -64,7 +64,7 @@ describe Project do
 
     context 'when user overrides root_dir' do
       it 'incudes returns new root path' do
-        @project.first[1]['root_dir'].must_include project_path
+        expect(@project.first[1]['root_dir']).to include project_path
       end
     end
 
@@ -77,7 +77,7 @@ describe Project do
 
     context 'when remote is added to an existing project' do
       it 'adds a new remote' do
-        @project.first[1]['bitbucket'].must_equal @project.first[1]['origin']
+        expect(@project.first[1]['bitbucket']).to eq(@project.first[1]['origin'])
       end
     end
   end
@@ -89,7 +89,7 @@ describe Project do
 
     context 'when a new group is set for existing project' do
       it 'changes the group' do
-        @project.first[1]['group'].must_equal 'ruby'
+        expect(@project.first[1]['group']).to eq('ruby')
       end
     end
   end

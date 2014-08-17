@@ -46,13 +46,15 @@ project1:
   origin: path/to/repo
   github: path/to/repo
   assembla: path/to/repo
+  bitbucket: path/to/repo
   heroku: path/to/repo
   root_dir: path/to/root_dir #where your repository will be cloned
   group: name # useful if you do not want to fetch changes for all
 project2:
   origin: path/to/repo
-  github: path/to/repo
   assembla: path/to/repo
+  github: path/to/repo
+  bitbucket: path/to/repo
   heroku: path/to/repo
   root_dir: path/to/root_dir #where your repository will be cloned
   group: web
