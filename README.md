@@ -1,4 +1,5 @@
 [![Gem Version](http://img.shields.io/gem/v/git-projects.svg)](https://rubygems.org/gems/git-projects)
+[![Dependency Status](https://gemnasium.com/katgironpe/git-projects.svg)](https://gemnasium.com/katgironpe/git-projects)
 [![Code Climate](https://codeclimate.com/github/katgironpe/git-projects.png)](https://codeclimate.com/github/katgironpe/git-projects)
 
 # Git Projects
