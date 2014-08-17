@@ -35,7 +35,8 @@ Session.vim
 /spec/reports/
 /test/version_tmp/
 /tmp/
-
+tmp/repos/git-projects.yml
+spec/tmp/projects/git-projects.yml
 ## Documentation cache and generated files:
 /.yardoc/
 /_yardoc/
