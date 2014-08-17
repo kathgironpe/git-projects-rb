@@ -6,7 +6,7 @@ describe Project do
   let(:project_path) { '/tmp/repos' }
   let(:path) { git_projects_path(project_path) }
   let(:config_path) { File.join(path, 'git-projects.yml') }
-  let(:project_path) { '/test/tmp/projects' }
+  let(:project_path) { '/spec/tmp/projects' }
 
   before do
     clean_projects_path(project_path)
