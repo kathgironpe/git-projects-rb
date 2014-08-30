@@ -27,7 +27,7 @@ Be careful. Sometimes it's not useful to do `git push all --all`.
 ## Prerequisities
 
 * Git
-* Ruby 2.0.0 +
+* Ruby 1.9.3 +
 * Git projects
 
 ## Installation
@@ -47,14 +47,12 @@ You must create a configuration file manually. Use this `YAML` format:
 project1:
   origin: path/to/repo
   github: path/to/repo
-  assembla: path/to/repo
   bitbucket: path/to/repo
   heroku: path/to/repo
   root_dir: path/to/root_dir #where your repository will be cloned
   group: name # useful if you do not want to fetch changes for all
 project2:
   origin: path/to/repo
-  assembla: path/to/repo
   github: path/to/repo
   bitbucket: path/to/repo
   heroku: path/to/repo
@@ -115,7 +113,6 @@ If you added a new remote by editing the config file, you might want to add to m
 ```bash
 git-projects add-remotes
 ```
-
 
 ## Maintainer
 
