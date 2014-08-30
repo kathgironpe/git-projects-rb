@@ -34,12 +34,14 @@ module GitProjectRemote
     def add_new_remote(g, name, remote)
       g.add_remote(name, remote)
       g.add_remote('all', remote) unless remote_exists?(g, name)
+      `git remote set-url --add all #{remote}`
       puts "Added remote #{name}".green
     end
 
     # Add remote
     def add_remote(g, v)
       g.add_remote('origin', v['origin']) unless remote_exists?(g, 'origin')
+      g.add_remote('all', v['origin']) unless remote_exists?(g, 'all')
       v.each do |name, remote|
         next if  %w(root_dir all group).include?(name) ||
           g.remotes.map(&:name).include?(name)

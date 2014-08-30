@@ -94,6 +94,11 @@ describe GitProject do
         remotes = Git.open("#{git_projects_path(project_path)}/a").remotes.map(&:name)
         expect(remotes).to include('bitbucket')
       end
+
+      it 'adds an all remote' do
+        remotes = Git.open("#{git_projects_path(project_path)}/a").remotes.map(&:name)
+        expect(remotes).to include('all')
+      end
     end
   end
 end
