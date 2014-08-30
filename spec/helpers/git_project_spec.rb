@@ -3,7 +3,7 @@ require_relative '../../lib/helpers/git_project'
 
 describe GitProject do
 
-  let(:project_path) { './tmp/repos' }
+  let(:project_path) { 'tmp/repos' }
   let(:path) { git_projects_path(project_path) }
   let(:config_path) { "#{path}/git-projects.yml" }
   let(:directories) { Dir.entries(path) }

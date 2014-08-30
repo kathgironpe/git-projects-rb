@@ -2,13 +2,17 @@ require 'git'
 
 module TestRepos
 
+  def repos_path(project_path)
+    "#{Dir.pwd}/#{project_path}"
+  end
+
   def clean_projects_path(project_path)
-    path = Dir.pwd+project_path
+    path = repos_path(project_path)
     `rm -rf #{path}`
   end
 
   def git_projects_path(project_path)
-    path = Dir.pwd+project_path
+    path = repos_path(project_path)
     FileUtils::mkdir_p(path) unless File.directory?(path)
     path
   end
