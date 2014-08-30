@@ -50,6 +50,7 @@ PLATFORMS
 
 DEPENDENCIES
   aruba (= 0.6.0)
+  cucumber
   git-projects!
   rake
   rspec
