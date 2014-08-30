@@ -59,5 +59,5 @@ spec/tmp/projects/git-projects.yml
 # Cucumber
 
 results.html
-
+tmp/repos/git-projects.yml
 git-projects.yml
