@@ -26,7 +26,6 @@ module TestRepos
   end
 
   def add_remote(project, name, url=nil)
-
     unless File.exists?(ENV['GIT_PROJECTS'])
       GitProject.create_config(ENV['GIT_PROJECTS'].gsub('git-projects.yml', ''))
     end
