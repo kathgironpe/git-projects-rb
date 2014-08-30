@@ -13,7 +13,7 @@ module TestRepos
 
   def git_projects_path(project_path)
     path = repos_path(project_path)
-    FileUtils::mkdir_p(path) unless File.directory?(path)
+    FileUtils.mkdir_p(path) unless File.directory?(path)
     path
   end
 
