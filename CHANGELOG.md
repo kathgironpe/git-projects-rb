@@ -42,3 +42,8 @@
 ## git-projects 0.0.8 (July 11, 2014)
 
 * Fixed a regression
+
+## git-projects 0.0.9 (August 30, 2014)
+
+* Added the "all" remote
+* Fixed Travis CI build
