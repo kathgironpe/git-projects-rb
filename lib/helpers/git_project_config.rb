@@ -53,7 +53,7 @@ module GitProjectConfig
       end
     end
 
-    # Create has for the project
+    # Create hash for the project
     def project_info_hash(dir, project, group)
       g = Git.open(File.join(dir, project))
       p = {}
@@ -72,7 +72,7 @@ module GitProjectConfig
 
     # Create a configuration file based on a root path
     def create_config(dir, group = nil)
-      dir = dir.is_a?(Array) ? dir.first : dir
+      dir = dir.respond_to?(:first) ? dir.first : dir
       config_file = File.join(dir, 'git-projects.yml')
       group ||= dir.split(File::SEPARATOR).last if dir
       fail "The config file, #{config_file} exists" if File.exist?(config_file)
