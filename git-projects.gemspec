@@ -19,11 +19,11 @@ Gem::Specification.new do |s|
   s.files = Dir['lib/**/*.rb']
   s.executables << 'git-projects'
   s.add_dependency('colorize')
-  s.add_dependency('git', '1.2.8')
-  s.add_development_dependency('aruba', '0.6.0')
+  s.add_dependency('git', '~> 1.2')
+  s.add_development_dependency('aruba', '~> 0.6')
   s.add_development_dependency('cucumber')
   s.add_development_dependency('rake')
   s.add_development_dependency('rspec')
   s.add_development_dependency('rspec-core')
-  s.add_runtime_dependency('gli','2.12.0')
+  s.add_runtime_dependency('gli','~> 2.0')
 end
