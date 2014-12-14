@@ -27,7 +27,7 @@ Be careful. Sometimes it's not useful to do `git push all --all`.
 ## Prerequisities
 
 * Git
-* Ruby 1.9.3 +
+* Ruby 2.1.2 +
 * Git projects
 
 ## Installation

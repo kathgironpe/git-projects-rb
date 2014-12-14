@@ -2,6 +2,5 @@ language: ruby
 before_install:
   - mkdir -p /tmp/repos
 rvm:
-  - 1.9.3
   - 2.1.2
   - 2.1.5
