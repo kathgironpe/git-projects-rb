@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    git-projects (1.0.0)
+    git-projects (1.0.2)
       colorize
       git (~> 1.2)
       gli (~> 2.0)
