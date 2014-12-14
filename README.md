@@ -116,4 +116,4 @@ git-projects add-remotes
 
 ## Maintainer
 
-<a href="http://c.kat.pe" target="_blank">Katherine Pe</a>
+<a href="https://c.kat.pe" target="_blank">Katherine Pe</a>

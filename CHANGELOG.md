@@ -47,3 +47,7 @@
 
 * Added the "all" remote
 * Fixed Travis CI build
+
+## git-projects 1.0.1 (December 14, 2014)
+
+* Minor improvements
