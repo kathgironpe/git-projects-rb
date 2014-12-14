@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.name = 'git-projects'
   s.version = GitProjects::VERSION
   s.author = 'Katherine Pe'
-  s.email = 'k@kat.pe'
+  s.email = 'kp@kat.pe'
   s.homepage = 'https://github.com/katgironpe/git-projects'
   s.platform = Gem::Platform::RUBY
   s.summary = 'Easily manage Git projects'
