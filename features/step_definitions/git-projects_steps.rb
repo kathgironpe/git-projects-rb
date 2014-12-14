@@ -36,7 +36,7 @@ When /^I add remotes$/ do
 end
 
 When /^I create a config for repositories$/ do
-  project_path = '/tmp/repos'
+  project_path = 'tmp/repos'
   path = git_projects_path(project_path)
   config_path = "#{path}/git-projects.yml"
   clean_projects_path(project_path)
@@ -47,7 +47,7 @@ When /^I create a config for repositories$/ do
 end
 
 When /^I create a config for repositories with group "(.*?)"$/ do |name|
-  project_path = '/tmp/repos'
+  project_path = 'tmp/repos'
   path = git_projects_path(project_path)
   config_path = "#{path}/git-projects.yml"
   clean_projects_path(project_path)
