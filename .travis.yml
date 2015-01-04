@@ -3,4 +3,3 @@ before_install:
   - mkdir -p /tmp/repos
 rvm:
   - 2.1.2
-  - 2.1.5
