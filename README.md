@@ -82,6 +82,10 @@ cd /path/to/repositories
 git-projects config web
 ```
 
+## Defining the root_dir
+
+The `root_dir` can be a directory or a symbolic to a directory on a different drive.
+
 ## Checking or initializing all repositories
 
 This will check if repositories are cloned. Otherwise, it will initialize the repository and add the remotes.

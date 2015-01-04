@@ -58,8 +58,7 @@ module GitProjectRemote
       g.add_remote('origin', v['origin']) unless remote_exists?(g, 'origin')
       g.add_remote('all', v['origin']) unless remote_exists?(g, 'all')
       v.each do |name, remote|
-        next if  %w(root_dir all group).include?(name) ||
-          g.remotes.map(&:name).include?(name)
+        next if  %w(root_dir all group).include?(name) || remote_exists?(g, name)
         add_new_remote(g, name, remote)
       end
     end
