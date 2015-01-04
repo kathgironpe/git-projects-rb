@@ -56,7 +56,6 @@ describe GitProject do
   end
 
   describe '#fetch_all' do
-
     before do
       @git = GitProject.new(config_path)
       @git.init

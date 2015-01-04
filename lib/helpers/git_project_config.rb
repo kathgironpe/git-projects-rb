@@ -23,13 +23,11 @@ module GitProjectConfig
 
     # Check for the config
     def check_config
-      if ENV['GIT_PROJECTS']
-        puts "Checking repositories. If things go wrong,
+      puts "Checking repositories. If things go wrong,
               update #{ENV['GIT_PROJECTS']}".green
-      else
-        fail "Please add the path your git projects config. \n
-              export GIT_PROJECTS=/path/to/git_projects.yml"
-      end
+
+      fail "Please add the path your git projects config. \n
+              export GIT_PROJECTS=/path/to/git_projects.yml" unless ENV['GIT_PROJECTS']
     end
 
     # Create YAML file

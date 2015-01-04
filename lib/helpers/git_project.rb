@@ -64,11 +64,10 @@ class GitProject
   # 2. Add all other remotes unless it is origin
   def create_project_and_remotes(k, v)
     puts "root_dir isn't defined for #{k}" unless v['root_dir']
-    unless File.directory?(v['root_dir'])
-      puts "The dir #{v['root_dir']} does not exist"
-    end
-    GitProject.create_root_dir(v['root_dir'])
-    g =  GitProject.clone(v.values[0], k, v['root_dir'])
+    GitProject.dir_or_symlink_exist?(v['root_dir'])
+    root_dir = GitProject.real_root_dir(v['root_dir'])
+    GitProject.create_root_dir(root_dir)
+    g =  GitProject.clone(v.values[0], k, root_dir)
     GitProject.add_remote(g, v) if g
   end
 
@@ -76,8 +75,9 @@ class GitProject
   def fetch_all(group = nil)
     @project.all(group).each do |k, v|
       puts "Fetching changes for #{k}".green
-      GitProject.create_root_dir(v['root_dir'])
-      working_dir = "#{v['root_dir']}/#{k}"
+      root_dir = GitProject.real_root_dir(v['root_dir'])
+      GitProject.create_root_dir(root_dir)
+      working_dir = "#{root_dir}/#{k}"
       g = Git.open(working_dir) || Git.init(working_dir)
       GitProject.fetch(g)
     end

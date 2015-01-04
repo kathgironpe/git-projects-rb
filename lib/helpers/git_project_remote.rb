@@ -6,14 +6,29 @@ module GitProjectRemote
 
   # Check/ add new remotes
   module ClassMethods
+    # Check if symbolic link or directory exists
+    def dir_or_symlink_exist?(path)
+      symbolic_link_exists = (File.symlink?(path) && File.readlink(path))
+      unless File.directory?(path) || symbolic_link_exists
+        puts "The dir #{path} does not exist"
+      end
+    end
+
+    # Get real root_dir
+    def real_root_dir(path)
+      return File.readlink(path) if File.symlink?(path)
+      path
+    end
+
     # Clone unless dir exists
     def clone(url, name, path)
+      path = real_root_dir(path)
       r = "#{path}/#{name}"
-      if Git.open(r)
+      g = Git.open(r)
+      if g
         puts 'Already cloned '.yellow + "#{url}".blue
       else
         Git.clone(url, name, path: path) || Git.init(r)
-        g = Git.open(r)
         puts "Cloning #{url} as #{name} into #{path}".green
       end
       g

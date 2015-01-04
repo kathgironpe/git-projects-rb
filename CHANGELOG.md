@@ -51,3 +51,7 @@
 ## git-projects 1.0.2 (December 14, 2014)
 
 * Minor improvements
+
+## git-projects 1.0.3 (January 4, 2015)
+
+* Made it work with root_dir as a symbolic link

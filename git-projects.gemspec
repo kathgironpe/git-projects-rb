@@ -2,7 +2,7 @@ require File.join([File.dirname(__FILE__),'lib','git-projects','version.rb'])
 Gem::Specification.new do |s|
   s.name = 'git-projects'
   s.version = GitProjects::VERSION
-  s.author = 'Katherine Pe'
+  s.author = 'Katherine G. Pe'
   s.email = 'kp@kat.pe'
   s.homepage = 'https://github.com/katgironpe/git-projects'
   s.platform = Gem::Platform::RUBY
