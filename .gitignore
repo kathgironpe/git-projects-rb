@@ -61,3 +61,8 @@ spec/tmp/projects/git-projects.yml
 results.html
 tmp/repos/git-projects.yml
 git-projects.yml
+
+## PROJECT::SPECIFIC
+doc
+Gemfile.lock
+results.html
